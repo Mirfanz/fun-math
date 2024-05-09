@@ -1,10 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import Home from "./ui/home";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Link href={"/creapline"}>Creapline</Link>
-    </main>
-  );
+export default function HomePage() {
+  return <Home />;
 }

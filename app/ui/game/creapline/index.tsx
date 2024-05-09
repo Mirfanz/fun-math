@@ -1,8 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PlayIcon, TimerIcon, TimerOffIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import Swal from "sweetalert2";
 
 type DataType = number[][];
 
@@ -79,22 +81,38 @@ const CreaplineUI = () => {
             height: countY * 2 + "rem",
           }}
         >
-          {data.map((i, posX) => (
-            <div key={"data-x-" + posX} className="flex flex-col">
-              {i.map((j, posY) => (
-                <div
-                  key={`data-x-${posX}-y-${posY}`}
-                  className={` flex duration-300  items-center justify-center w-8 aspect-square ${
-                    activeX == posX && (activeY == posY || activeY + 1 == posY)
-                      ? "bg-gray-200 "
-                      : ""
-                  }`}
-                >
-                  {j}
-                </div>
-              ))}
+          {data.length ? (
+            data.map((i, posX) => (
+              <div key={"data-x-" + posX} className="flex flex-col">
+                {i.map((j, posY) => (
+                  <div
+                    key={`data-x-${posX}-y-${posY}`}
+                    className={` flex duration-300  items-center justify-center w-8 aspect-square ${
+                      activeX == posX &&
+                      (activeY == posY || activeY + 1 == posY)
+                        ? "bg-gray-200 "
+                        : ""
+                    }`}
+                  >
+                    {j}
+                  </div>
+                ))}
+              </div>
+            ))
+          ) : (
+            <div className="w-full h-full flex flex-col justify-center items-center text-center">
+              <h4 className="font-semibold text-2xl mb-2">Creapline?</h4>
+              <p className="mb-4">Cara bermain game creapline</p>
+              <iframe
+                className="aspect-video w-80 rounded-md"
+                src="https://www.youtube.com/embed/qjqp4ecePGg?si=qT6oIgj1djlwxH52"
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
             </div>
-          ))}
+          )}
         </div>
       </div>
       <div className="container mt-3">
@@ -128,11 +146,22 @@ const CreaplineUI = () => {
               <button
                 key={"button-" + n}
                 className="select-none aspect-square text-2xl active:scale-95 font-semibold rounded-md bg-indigo-300"
-                onClick={() =>
-                  validate(n)
-                    ? setCorrect((prev) => prev + 1)
-                    : setIncorrect((prev) => prev + 1)
-                }
+                onClick={() => {
+                  if (validate(n)) setCorrect((prev) => prev + 1);
+                  else {
+                    setIncorrect((prev) => prev + 1);
+                    Swal.fire({
+                      timerProgressBar: false,
+                      toast: true,
+                      position: "top",
+                      timer: 1500,
+                      showConfirmButton: false,
+                      text: "Salah",
+                      width: "auto",
+                      padding: "0",
+                    });
+                  }
+                }}
               >
                 {n}
               </button>
