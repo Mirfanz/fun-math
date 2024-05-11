@@ -46,41 +46,8 @@ const Home = (props: Props) => {
           </CardHeader>
           <CardFooter className="gap-2">
             <Link href="/game/creapline">
-              <Button size={"sm"}>Latihan</Button>
+              <Button size={"sm"}>Mulai Bermain</Button>
             </Link>
-            <Dialog>
-              <DialogTrigger>
-                <Button size={"sm"}>Main Bareng</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Mabar Creapline</DialogTitle>
-                  <DialogDescription>
-                    Masukkan Kode Room Mabar
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="flex items-center space-x-2">
-                  <div className="grid flex-1 gap-2">
-                    <Input
-                      placeholder="Kode Room"
-                      onChange={(e) => setInpRoomCode(e.target.value)}
-                      value={inpRoomCode}
-                      autoComplete="off"
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="px-3"
-                    onClick={() => {
-                      if (!inpRoomCode) return;
-                      router.push("/game/creapline/" + inpRoomCode);
-                    }}
-                  >
-                    Masuk Room
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
           </CardFooter>
         </Card>
       </div>

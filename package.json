@@ -1,5 +1,5 @@
 {
-  "name": "fangame",
+  "name": "funmath",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -24,6 +24,7 @@
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
+    "socket.io-client": "^4.7.5",
     "sonner": "^1.4.41",
     "sweetalert2": "^11.10.8",
     "tailwind-merge": "^2.3.0",

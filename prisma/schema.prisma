@@ -18,6 +18,7 @@ model User {
   Account       Account?
   // Optional for WebAuthn support
   Authenticator Authenticator[]
+  CreaplineHistories CreaplineHistories[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,4 +81,15 @@ model Authenticator {
   transports           String?
  
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CreaplineHistories{
+  id                  String    @id @default(cuid())
+  time                Int
+  correct             Int
+  inCorrect           Int
+  createdAt           DateTime  @default(now())
+  userId              String?
+
+  user User? @relation(fields: [userId],references: [id],onDelete: SetNull)
 }

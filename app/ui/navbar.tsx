@@ -73,7 +73,7 @@ const Navbar = ({ session }: Props) => {
   ];
 
   return (
-    <nav className="bg-slate-200 sticky top-0">
+    <nav className="bg-slate-200 z-50 sticky top-0">
       <div className="container">
         <div className="flex py-3 items-center justify-between">
           <div className="text-xl font-bold gap-2 text-teal-600 flex items-center">

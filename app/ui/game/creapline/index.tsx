@@ -1,14 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { PlayIcon, TimerIcon, TimerOffIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
+import Leaderboard from "./leaderboard";
+import { AddCreaplineHistory } from "@/lib/actions";
+import { useToast } from "@/components/ui/use-toast";
+import { signIn } from "next-auth/react";
 
 type DataType = number[][];
 
 const CreaplineUI = () => {
+  const toast = useToast();
   const [data, setData] = useState<DataType>([]);
   const countX: number = 15;
   const countY: number = 12;
@@ -21,11 +25,13 @@ const CreaplineUI = () => {
   const [timer, setTimer] = useState<number>(0);
   const [hideStartButton, setHideStartButton] = useState<boolean>(false);
 
+  const timerIntervalRef = useRef<NodeJS.Timeout>();
+
   function validate(key: number) {
     const result = (data[activeX][activeY] + data[activeX][activeY + 1]) % 10;
     if (key !== result) return false;
     if (activeX >= countX - 1 && activeY >= countY - 2) {
-      endGame();
+      endGame("finish");
     } else if (activeY == countY - 2) {
       setActiveX((prev) => prev + 1);
       setActiveY(0);
@@ -37,21 +43,64 @@ const CreaplineUI = () => {
 
   function startGame() {
     setData(generateData(countX, countY));
+    setIsPlaying(true);
     setActiveX(0);
     setActiveY(0);
-    setTimer(0);
     setCorrect(0);
     setIncorrect(0);
 
-    setIsPlaying(true);
+    setTimer(0);
+    clearInterval(timerIntervalRef.current);
+
+    timerIntervalRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev >= maxTime - 1) endGame("timeout");
+        return prev + 1;
+      });
+    }, 1000);
   }
 
-  function endGame() {
+  function endGame(condition: "finish" | "timeout") {
     setIsPlaying(false);
     setHideStartButton(true);
+    clearInterval(timerIntervalRef.current);
     setTimeout(() => {
       setHideStartButton(false);
     }, 2000);
+
+    switch (condition) {
+      case "finish":
+        Swal.fire({
+          icon: "success",
+          titleText: "Mantapp Brooo!",
+          showConfirmButton: false,
+        });
+        AddCreaplineHistory({
+          correct: correct,
+          inCorrect: incorrect,
+          time: timer,
+        }).then((resp) => {
+          if (!resp.success)
+            toast.toast({
+              title: "Ayo SignIn Dulu!",
+              description: "Permainan tidak akan tersimpan jika belum signIn.",
+              action: (
+                <Button size={"sm"} onClick={() => signIn()}>
+                  Login
+                </Button>
+              ),
+            });
+        });
+        break;
+      case "timeout":
+        Swal.fire({
+          titleText: "Waktu Habis :(",
+          color: "red",
+          text: "Coba lagi lah masak gitu doang nyerah.",
+          showConfirmButton: false,
+        });
+        break;
+    }
   }
 
   function generateData(x: number, y: number) {
@@ -63,14 +112,6 @@ const CreaplineUI = () => {
     }
     return result;
   }
-
-  useEffect(() => {
-    if (timer >= maxTime) return endGame();
-    if (isPLaying)
-      setTimeout(() => {
-        setTimer((prev) => prev + 1);
-      }, 1000);
-  }, [isPLaying, timer]);
 
   return (
     <main>
@@ -147,20 +188,10 @@ const CreaplineUI = () => {
                 key={"button-" + n}
                 className="select-none aspect-square text-2xl active:scale-95 font-semibold rounded-md bg-indigo-300"
                 onClick={() => {
-                  if (validate(n)) setCorrect((prev) => prev + 1);
-                  else {
-                    setIncorrect((prev) => prev + 1);
-                    Swal.fire({
-                      timerProgressBar: false,
-                      toast: true,
-                      position: "top",
-                      timer: 1500,
-                      showConfirmButton: false,
-                      text: "Salah",
-                      width: "auto",
-                      padding: "0",
-                    });
-                  }
+                  navigator.vibrate(50);
+                  validate(n)
+                    ? setCorrect((prev) => prev + 1)
+                    : setIncorrect((prev) => prev + 1);
                 }}
               >
                 {n}
@@ -178,6 +209,11 @@ const CreaplineUI = () => {
             Mulai Permainan
           </Button>
         )}
+      </div>
+      <div className="container my-8">
+        <Suspense fallback={"Loading..."}>
+          <Leaderboard />
+        </Suspense>
       </div>
     </main>
   );
