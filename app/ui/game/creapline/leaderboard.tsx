@@ -1,8 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FetchCreaplineHistories } from "@/lib/actions";
-import { CreaplineLeaderboard } from "@/type";
+import { CreaplineLeaderboard } from "@/types";
 import { Prisma } from "@prisma/client";
 import {
   LucideCalendarClock,
@@ -34,24 +33,24 @@ const Leaderboard = (props: Props) => {
   const refreshInterval = useRef<NodeJS.Timeout>();
 
   function getLeaderBoard() {
-    FetchCreaplineHistories()
-      .then((resp) => {
-        console.log("resp", resp);
-        if (!resp.success) return;
-        setRefreshTimer(10);
-        setLeaderboard(resp.data);
-        clearInterval(refreshInterval.current);
-        refreshInterval.current = setInterval(() => {
-          setRefreshTimer((prev) => {
-            if (prev <= 0) {
-              clearInterval(refreshInterval.current);
-              getLeaderBoard();
-            }
-            return prev > 0 ? prev - 1 : 0;
-          });
-        }, 1000);
-      })
-      .catch(() => {});
+    // FetchCreaplineHistories()
+    //   .then((resp) => {
+    //     console.log("resp", resp);
+    //     if (!resp.success) return;
+    //     setRefreshTimer(10);
+    //     setLeaderboard(resp.data);
+    //     clearInterval(refreshInterval.current);
+    //     refreshInterval.current = setInterval(() => {
+    //       setRefreshTimer((prev) => {
+    //         if (prev <= 0) {
+    //           clearInterval(refreshInterval.current);
+    //           getLeaderBoard();
+    //         }
+    //         return prev > 0 ? prev - 1 : 0;
+    //       });
+    //     }, 1000);
+    //   })
+    //   .catch(() => {});
   }
   useEffect(() => {
     getLeaderBoard();

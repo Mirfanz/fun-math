@@ -29,21 +29,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { auth } from "@/auth";
 import Link from "next/link";
-import { Session } from "next-auth";
-import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { usePathname } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { useSession } from "@/context/auth-provider";
 
-type Props = {
-  session: Session | null;
-};
+type Props = {};
 
-const Navbar = ({ session }: Props) => {
+const Navbar = ({}: Props) => {
+  const session = useSession();
   const pathname = usePathname();
   const listNavItem = [
     {
@@ -55,8 +52,8 @@ const Navbar = ({ session }: Props) => {
     {
       label: "Live Chat",
       icon: <MessagesSquareIcon className="w-4 h-4" />,
-      active: pathname === "/livechat",
-      path: "/livechat",
+      active: pathname === "/chats",
+      path: "/chats",
     },
     {
       label: "Feedback",
@@ -108,34 +105,33 @@ const Navbar = ({ session }: Props) => {
                 </Link>
               ))}
               <div className="absolute bottom-0 p-3 left-0 right-0 w-full">
-                {session?.user ? (
+                {session.user ? (
                   <>
                     <Card className="flex gap-2 p-3 rounded-lg items-center">
                       <Avatar className="">
-                        <AvatarImage src={session.user.image || ""} />
+                        <AvatarImage src={session.user.photoURL || ""} />
                         <AvatarFallback>
-                          {session.user.name?.[0]}
+                          {session.user.displayName?.[0]}
                         </AvatarFallback>
                       </Avatar>
                       <div className="me-auto">
-                        <h4 className="font-medium">{session.user.name}</h4>
-                        <p className="text-sm ">{session.user.email}</p>
+                        <h4 className="font-medium">
+                          {session.user.displayName}
+                        </h4>
+                        <p className="text-sm w-full line-clamp-1">
+                          {session.user.email}
+                        </p>
                       </div>
                     </Card>
                   </>
                 ) : (
                   <>
                     <Alert>
-                      {/* <AlertCircleIcon className="w-4 h-4" /> */}
                       <AlertTitle>Kamu Siapa?</AlertTitle>
                       <AlertDescription>
                         Silahkan masuk ke akunmu dulu.
                       </AlertDescription>
-                      <Button
-                        className="w-full mt-3"
-                        size={"sm"}
-                        onClick={() => signIn()}
-                      >
+                      <Button className="w-full mt-3" size={"sm"}>
                         SignIn Account
                       </Button>
                     </Alert>

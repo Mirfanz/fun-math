@@ -5,13 +5,12 @@ import { PlayIcon, TimerIcon, TimerOffIcon } from "lucide-react";
 import { Suspense, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import Leaderboard from "./leaderboard";
-import { AddCreaplineHistory } from "@/lib/actions";
 import { useToast } from "@/components/ui/use-toast";
-import { signIn } from "next-auth/react";
 
 type DataType = number[][];
+type Props = {};
 
-const CreaplineUI = () => {
+const CreaplineUI = ({}: Props) => {
   const toast = useToast();
   const [data, setData] = useState<DataType>([]);
   const countX: number = 15;
@@ -75,22 +74,22 @@ const CreaplineUI = () => {
           titleText: "Mantapp Brooo!",
           showConfirmButton: false,
         });
-        AddCreaplineHistory({
-          correct: correct,
-          inCorrect: incorrect,
-          time: timer,
-        }).then((resp) => {
-          if (!resp.success)
-            toast.toast({
-              title: "Ayo SignIn Dulu!",
-              description: "Permainan tidak akan tersimpan jika belum signIn.",
-              action: (
-                <Button size={"sm"} onClick={() => signIn()}>
-                  Login
-                </Button>
-              ),
-            });
-        });
+        // AddCreaplineHistory({
+        //   correct: correct,
+        //   inCorrect: incorrect,
+        //   time: timer,
+        // }).then((resp) => {
+        //   if (!resp.success)
+        //     toast.toast({
+        //       title: "Ayo SignIn Dulu!",
+        //       description: "Permainan tidak akan tersimpan jika belum signIn.",
+        //       action: (
+        //         <Button size={"sm"} onClick={() => signIn()}>
+        //           Login
+        //         </Button>
+        //       ),
+        //     });
+        // });
         break;
       case "timeout":
         Swal.fire({
