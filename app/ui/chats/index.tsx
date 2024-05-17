@@ -8,7 +8,7 @@ import { SendIcon } from "lucide-react";
 import React, { RefObject, useEffect, useRef, useState } from "react";
 import Buble from "./buble";
 import { io, Socket } from "socket.io-client";
-import { Message } from "@/types";
+import { Message, User } from "@/types";
 import { auth, db } from "@/firebase";
 import {
   addDoc,
@@ -25,6 +25,44 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 type Props = {};
+
+const RenderChats = (chats: Message[]) => {
+  const session = useSession();
+  const lastUserRef = useRef<User>();
+  const lastDateRef = useRef<Date>();
+
+  return chats.map((item, index) => {
+    let showUser = false;
+    let showDate = false;
+    if (lastUserRef.current?.email != item.user.email || index == 0) {
+      lastUserRef.current = item.user;
+      showUser = true;
+    }
+    if (lastDateRef.current?.toDateString() !== item.time.toDateString()) {
+      lastDateRef.current = item.time;
+      showDate = true;
+      showUser = true;
+    }
+    return (
+      <>
+        {showDate && (
+          <div className="bg-slate-100 py-2 text-center my-3 text-sm">
+            {item.time.toDateString()}
+          </div>
+        )}
+        <Buble
+          key={"chat-" + index}
+          content={item.content}
+          time={item.time}
+          user={item.user}
+          className={showUser ? "mt-3" : ""}
+          showUser={showUser}
+          isMine={item.user.email == session.user?.email}
+        />
+      </>
+    );
+  });
+};
 
 const LiveChatUI = ({}: Props) => {
   const session = useSession();
@@ -53,6 +91,7 @@ const LiveChatUI = ({}: Props) => {
           });
           setChats(newChats);
           setTimeout(() => {
+            // if (document.body.scrollHeight - window.scrollY < 1000)
             window.scrollTo({
               top: document.body.scrollHeight,
               behavior: "smooth",
@@ -91,17 +130,7 @@ const LiveChatUI = ({}: Props) => {
   }
   return (
     <main>
-      <div className="container mt-3 mb-16">
-        {chats.map((item, index) => (
-          <Buble
-            key={"chat-" + index}
-            content={item.content}
-            time={item.time}
-            user={item.user}
-            isMine={item.user.email == session.user?.email}
-          />
-        ))}
-      </div>
+      <div className="container mt-3 mb-16">{RenderChats(chats)}</div>
       <div className="fixed bottom-0 bg-slate-100 left-0 right-0">
         <div className="container">
           {!session.user ? (

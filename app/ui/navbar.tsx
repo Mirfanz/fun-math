@@ -36,6 +36,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { usePathname } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { useSession } from "@/context/auth-provider";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "@/firebase";
 
 type Props = {};
 
@@ -131,7 +133,13 @@ const Navbar = ({}: Props) => {
                       <AlertDescription>
                         Silahkan masuk ke akunmu dulu.
                       </AlertDescription>
-                      <Button className="w-full mt-3" size={"sm"}>
+                      <Button
+                        onClick={() =>
+                          signInWithPopup(auth, new GoogleAuthProvider())
+                        }
+                        className="w-full mt-3"
+                        size={"sm"}
+                      >
                         SignIn Account
                       </Button>
                     </Alert>
