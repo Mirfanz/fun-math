@@ -13,18 +13,74 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSession } from "@/context/auth-provider";
 import { auth } from "@/firebase";
-import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
-import { GithubIcon, GoalIcon } from "lucide-react";
+import {
+  getRedirectResult,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signInWithRedirect,
+  updateProfile,
+} from "firebase/auth";
+import { AlertCircleIcon, GithubIcon, GoalIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Props = {};
 
 const LoginUI = (props: Props) => {
   const session = useSession();
   const router = useRouter();
+  const [field, setField] = useState({
+    email: "",
+    password: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
   const redirectUrl = useSearchParams().get("redirectUrl");
+
+  function inputChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    setField((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+
+    signInWithEmailAndPassword(auth, field.email, field.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        Swal.fire({
+          icon: "success",
+          toast: true,
+          position: "top-end",
+          title: `Halo, ${user.displayName}`,
+          showConfirmButton: false,
+        });
+      })
+      .catch((error) => {
+        const message = error.code.replace("auth/", "").replaceAll("-", " ");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: message,
+        });
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+  }
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        router.replace(redirectUrl || "/account");
+      }
+    });
+  }, []);
 
   if (!session.stateReady) return <div>Loading...</div>;
   else if (session.user) router.replace(redirectUrl || "/account");
@@ -39,19 +95,33 @@ const LoginUI = (props: Props) => {
         </Link>
       </CardHeader>
       <CardContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={handleFormSubmit}>
           <div className="flex flex-col gap-3">
             <div className="">
               <Label>Email</Label>
-              <Input type="email" placeholder="email@example.com" />
+              <Input
+                type="email"
+                name="email"
+                value={field.email}
+                onChange={inputChangeHandler}
+                placeholder="email@example.com"
+              />
             </div>
             <div className="">
               <Label>Password</Label>
-              <Input type="password" placeholder="Password" />
+              <Input
+                type="password"
+                name="password"
+                value={field.password}
+                onChange={inputChangeHandler}
+                placeholder="Password"
+              />
             </div>
           </div>
           <div className="mt-5 flex justify-between">
-            <Button type="submit">Sign In</Button>
+            <Button type="submit" disabled={submitting}>
+              {submitting ? "Submitting..." : "Sign In"}
+            </Button>
             <Button type="button" variant={"link"}>
               Forgot Password?
             </Button>
@@ -68,7 +138,13 @@ const LoginUI = (props: Props) => {
           >
             <GoalIcon className="w-4 h-4 me-2" /> Login With Google
           </Button>
-          <Button>
+          <Button
+            onClick={() => {
+              signInWithPopup(auth, new GithubAuthProvider()).then((result) => {
+                console.log(result);
+              });
+            }}
+          >
             <GithubIcon className="w-4 h-4 me-2" /> Login With Github
           </Button>
         </div>

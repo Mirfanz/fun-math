@@ -13,7 +13,7 @@ export default function AuthLayout({
         backgroundAttachment: "fixed",
       }}
     >
-      <div className="container pt-4 h-screen flex items-center justify-center">
+      <div className="container py-4 min-h-screen flex items-center justify-center">
         {children}
       </div>
     </main>
