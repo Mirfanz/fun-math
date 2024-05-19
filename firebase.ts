@@ -1,15 +1,18 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { Auth, getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCmaSidTJ1u4P8VEvCJdpaVDwTIiqfvK4I",
-  authDomain: "mirfanz-funmath.firebaseapp.com",
-  projectId: "mirfanz-funmath",
-  storageBucket: "mirfanz-funmath.appspot.com",
-  messagingSenderId: "199776895803",
-  appId: "1:199776895803:web:48cf3c79fbe84d2ffbad1e",
-  measurementId: "G-VYBTKKWLZD",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 export const app: FirebaseApp = initializeApp(firebaseConfig);

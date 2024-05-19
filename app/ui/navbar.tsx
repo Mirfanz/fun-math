@@ -1,43 +1,20 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import {
-  AlertCircle,
-  AlertCircleIcon,
   AlignRightIcon,
   BiohazardIcon,
-  BrainIcon,
-  Code2Icon,
-  CodeIcon,
-  CogIcon,
-  Gamepad2Icon,
-  HomeIcon,
   LayoutDashboardIcon,
-  LayoutPanelLeftIcon,
-  LibrarySquareIcon,
-  LogOutIcon,
   MailQuestionIcon,
   MessagesSquareIcon,
-  SettingsIcon,
   UserIcon,
 } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
-import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { usePathname } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { useSession } from "@/context/auth-provider";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "@/firebase";
 
 type Props = {};
 
@@ -134,9 +111,7 @@ const Navbar = ({}: Props) => {
                         Silahkan masuk ke akunmu dulu.
                       </AlertDescription>
                       <Button
-                        onClick={() =>
-                          signInWithPopup(auth, new GoogleAuthProvider())
-                        }
+                        onClick={() => session.signIn()}
                         className="w-full mt-3"
                         size={"sm"}
                       >

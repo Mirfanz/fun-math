@@ -19,9 +19,16 @@ export interface User {
   image?: string;
 }
 
+export interface SignInProps {
+  type?: "push" | "replace";
+  redirectUrl?: string;
+}
+
 export interface Session {
   user: AuthUser | null;
   stateReady: boolean;
+  signIn: (props?: SignInProps) => void; // Mengubah props menjadi optional
+  signOut: () => void;
 }
 
 export interface Message {

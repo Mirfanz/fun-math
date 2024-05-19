@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 
 type Props = {};
 
-const Home = (props: Props) => {
+const HomeUI = (props: Props) => {
   return (
     <main>
       <div className="container mt-4">
@@ -39,4 +39,4 @@ const Home = (props: Props) => {
   );
 };
 
-export default Home;
+export default HomeUI;

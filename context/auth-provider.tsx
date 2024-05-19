@@ -1,8 +1,9 @@
 "use client";
 
 import { auth } from "@/firebase";
-import { Session } from "@/types";
+import { Session, SignInProps } from "@/types";
 import { Auth, User } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import React, {
   createContext,
   ReactNode,
@@ -22,6 +23,8 @@ export const useSession = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [stateReady, setStateReady] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       console.log(user?.displayName);
@@ -32,8 +35,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .then(() => setStateReady(true))
       .catch(() => setStateReady(false));
   }, []);
+
+  const signIn = ({ type, redirectUrl }: SignInProps = {}) => {
+    const loginUrl = `/login?redirectUrl=${encodeURIComponent(
+      redirectUrl || window.location.href
+    )}`;
+    return type === "replace"
+      ? router.replace(loginUrl)
+      : router.push(loginUrl);
+  };
+
+  const signOut = () => auth.signOut();
+
   return (
-    <SessionContext.Provider value={{ user: user, stateReady }}>
+    <SessionContext.Provider
+      value={{ user: user, stateReady, signIn, signOut }}
+    >
       {children}
     </SessionContext.Provider>
   );

@@ -1,28 +1,20 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { SendIcon } from "lucide-react";
-import React, { RefObject, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Buble from "./buble";
-import { io, Socket } from "socket.io-client";
 import { Message, User } from "@/types";
-import { auth, db } from "@/firebase";
+import { db } from "@/firebase";
 import {
   addDoc,
   collection,
-  doc,
-  getDoc,
-  getDocs,
   onSnapshot,
   orderBy,
   query,
 } from "firebase/firestore";
 import { useSession } from "@/context/auth-provider";
-import { Skeleton } from "@/components/ui/skeleton";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 type Props = {};
 
@@ -129,14 +121,22 @@ const LiveChatUI = ({}: Props) => {
     // e.target.disabled = false;
   }
   return (
-    <main>
-      <div className="container mt-3 mb-16">{RenderChats(chats)}</div>
+    <main
+      style={{
+        backgroundImage: 'url("/img/chats-bg.jpg")',
+        backgroundSize: 400,
+        backgroundRepeat: "repeat",
+        backgroundAttachment: "fixed",
+      }}
+      className="pt-1 pb-16"
+    >
+      <div className="container">{RenderChats(chats)}</div>
       <div className="fixed bottom-0 bg-slate-100 left-0 right-0">
         <div className="container">
           {!session.user ? (
             <div className="mt-2 mb-3">
               <Button
-                onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}
+                onClick={() => session.signIn()}
                 className="w-full uppercase"
               >
                 Login To Send Message
