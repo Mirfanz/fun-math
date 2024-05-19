@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CreaplineLeaderboard } from "@/types";
-import { Prisma } from "@prisma/client";
 import {
   LucideCalendarClock,
   MedalIcon,
@@ -14,21 +13,7 @@ import React, { Suspense, useEffect, useRef, useState } from "react";
 type Props = {};
 
 const Leaderboard = (props: Props) => {
-  const [leaderboard, setLeaderboard] = useState<
-    Prisma.CreaplineHistoriesGetPayload<{
-      where: { userId: { not: null } };
-      include: {
-        user: {
-          select: {
-            name: true;
-            email: true;
-            image: true;
-            username: true;
-          };
-        };
-      };
-    }>[]
-  >();
+  const [leaderboard, setLeaderboard] = useState<CreaplineLeaderboard[]>([]);
   const [refreshTimer, setRefreshTimer] = useState(0);
   const refreshInterval = useRef<NodeJS.Timeout>();
 
@@ -73,12 +58,12 @@ const Leaderboard = (props: Props) => {
               className="p-2 flex gap-2 hover:brightness-95 duration-150 items-center"
             >
               <Avatar>
-                <AvatarImage src={item.user?.image || ""} />
+                <AvatarImage src={item.image || ""} />
                 <AvatarFallback>
-                  {item.user?.name?.[0].toUpperCase()}
+                  {item.name?.[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <h4 className="">{item.user?.name}</h4>
+              <h4 className="">{item.name}</h4>
               <div className=" py-1 px-3 flex items-center rounded text-xs ms-auto ">
                 <TimerIcon className="w-4 h-4" /> {item.time}s
               </div>

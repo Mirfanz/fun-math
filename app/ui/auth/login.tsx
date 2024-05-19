@@ -29,57 +29,51 @@ const LoginUI = (props: Props) => {
   if (!session.stateReady) return <div>Loading...</div>;
   else if (session.user) router.replace(redirectUrl || "/account");
   return (
-    <main>
-      <div className="container mt-4 h-screen flex items-center justify-center">
-        <Card className="w-full overflow-hidden">
-          <CardHeader className="flex-row items-center justify-between">
-            <CardTitle className="text-3xl font-bold">Login</CardTitle>
-            <Link href={"/register"} replace>
-              <Button size={"sm"} variant={"secondary"}>
-                Register
-              </Button>
-            </Link>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div className="flex flex-col gap-3">
-                <div className="">
-                  <Label>Email</Label>
-                  <Input type="email" placeholder="email@example.com" />
-                </div>
-                <div className="">
-                  <Label>Password</Label>
-                  <Input type="password" placeholder="Password" />
-                </div>
-              </div>
-              <div className="mt-5 flex justify-between">
-                <Button type="submit">Sign In</Button>
-                <Button type="button" variant={"link"}>
-                  Forgot Password?
-                </Button>
-              </div>
-            </form>
-            <div className="flex items-center gap-4 my-4">
-              <hr className="w-full" />
-              OR
-              <hr className="w-full" />
+    <Card className="w-full bg-opacity-75">
+      <CardHeader className="flex-row items-center justify-between">
+        <CardTitle className="text-3xl font-bold">Login</CardTitle>
+        <Link href={"/register"} replace>
+          <Button size={"sm"} variant={"secondary"}>
+            Register
+          </Button>
+        </Link>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div className="flex flex-col gap-3">
+            <div className="">
+              <Label>Email</Label>
+              <Input type="email" placeholder="email@example.com" />
             </div>
-            <div className="flex flex-col gap-2">
-              <Button
-                onClick={() =>
-                  signInWithRedirect(auth, new GoogleAuthProvider())
-                }
-              >
-                <GoalIcon className="w-4 h-4 me-2" /> Login With Google
-              </Button>
-              <Button>
-                <GithubIcon className="w-4 h-4 me-2" /> Login With Github
-              </Button>
+            <div className="">
+              <Label>Password</Label>
+              <Input type="password" placeholder="Password" />
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+          </div>
+          <div className="mt-5 flex justify-between">
+            <Button type="submit">Sign In</Button>
+            <Button type="button" variant={"link"}>
+              Forgot Password?
+            </Button>
+          </div>
+        </form>
+        <div className="flex items-center gap-4 my-4">
+          <hr className="w-full" />
+          OR
+          <hr className="w-full" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Button
+            onClick={() => signInWithRedirect(auth, new GoogleAuthProvider())}
+          >
+            <GoalIcon className="w-4 h-4 me-2" /> Login With Google
+          </Button>
+          <Button>
+            <GithubIcon className="w-4 h-4 me-2" /> Login With Github
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
