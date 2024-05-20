@@ -67,7 +67,6 @@ const Navbar = ({}: Props) => {
                 <BiohazardIcon strokeWidth={2.3} className="w-6 h-6" />
                 FunMath
               </div>
-              <Button onClick={() => session.signOut()}>Signout</Button>
               {listNavItem.map((item, index) => (
                 <Link
                   key={"nav-item-" + index}

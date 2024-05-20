@@ -128,7 +128,7 @@ const LiveChatUI = ({}: Props) => {
         backgroundRepeat: "repeat",
         backgroundAttachment: "fixed",
       }}
-      className="pt-1 pb-16"
+      className="pt-1 pb-16 min-h-screen"
     >
       <div className="container">{RenderChats(chats)}</div>
       <div className="fixed bottom-0 bg-slate-100 left-0 right-0">
