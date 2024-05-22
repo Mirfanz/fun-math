@@ -24,12 +24,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [stateReady, setStateReady] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       console.log(user?.displayName);
+      setIsAuthenticated(user ? true : false);
       setUser(user);
     });
+
     auth
       .authStateReady()
       .then(() => setStateReady(true))
@@ -49,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <SessionContext.Provider
-      value={{ user: user, stateReady, signIn, signOut }}
+      value={{ user: user, stateReady, signIn, signOut, isAuthenticated }}
     >
       {children}
     </SessionContext.Provider>

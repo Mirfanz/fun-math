@@ -29,6 +29,7 @@ export interface Session {
   stateReady: boolean;
   signIn: (props?: SignInProps) => void; // Mengubah props menjadi optional
   signOut: () => void;
+  isAuthenticated: boolean;
 }
 
 export interface Message {
