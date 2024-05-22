@@ -6,9 +6,9 @@ export interface PageProps {
 }
 
 export interface CreaplineLeaderboard {
-  name: string;
-  email: string;
-  image: string;
+  user: User;
+  correct: number;
+  incorrect: number;
   time: number;
 }
 

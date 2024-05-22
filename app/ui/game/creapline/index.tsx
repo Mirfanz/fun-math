@@ -6,12 +6,17 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import Leaderboard from "./leaderboard";
 import { useToast } from "@/components/ui/use-toast";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/firebase";
+import { useSession } from "@/context/auth-provider";
+import Link from "next/link";
 
 type DataType = number[][];
 type Props = {};
 
 const CreaplineUI = ({}: Props) => {
   const toast = useToast();
+  const session = useSession();
   const [data, setData] = useState<DataType>([]);
   const countX: number = 15;
   const countY: number = 12;
@@ -25,6 +30,7 @@ const CreaplineUI = ({}: Props) => {
   const [hideStartButton, setHideStartButton] = useState<boolean>(false);
 
   const timerIntervalRef = useRef<NodeJS.Timeout>();
+  const creaplineLeaderboardRef = collection(db, "c-leaderboard");
 
   function validate(key: number) {
     const result = (data[activeX][activeY] + data[activeX][activeY + 1]) % 10;
@@ -74,22 +80,28 @@ const CreaplineUI = ({}: Props) => {
           titleText: "Mantapp Brooo!",
           showConfirmButton: false,
         });
-        // AddCreaplineHistory({
-        //   correct: correct,
-        //   inCorrect: incorrect,
-        //   time: timer,
-        // }).then((resp) => {
-        //   if (!resp.success)
-        //     toast.toast({
-        //       title: "Ayo SignIn Dulu!",
-        //       description: "Permainan tidak akan tersimpan jika belum signIn.",
-        //       action: (
-        //         <Button size={"sm"} onClick={() => signIn()}>
-        //           Login
-        //         </Button>
-        //       ),
-        //     });
-        // });
+        if (session.user)
+          addDoc(creaplineLeaderboardRef, {
+            user: {
+              name: session.user.displayName,
+              email: session.user.email,
+              image: session.user.photoURL,
+            },
+            correct: correct,
+            inCorrect: incorrect,
+            time: timer,
+          });
+        else {
+          toast.toast({
+            title: "Ayo SignIn Dulu!",
+            description: "Permainan tidak akan tersimpan jika belum signIn.",
+            action: (
+              <Link href={"/login"}>
+                <Button size={"sm"}>Login</Button>
+              </Link>
+            ),
+          });
+        }
         break;
       case "timeout":
         Swal.fire({

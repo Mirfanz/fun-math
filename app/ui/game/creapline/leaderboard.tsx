@@ -1,7 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { db } from "@/firebase";
 import { CreaplineLeaderboard } from "@/types";
+import { collection, onSnapshot } from "firebase/firestore";
 import {
   LucideCalendarClock,
   MedalIcon,
@@ -14,28 +16,20 @@ type Props = {};
 
 const Leaderboard = (props: Props) => {
   const [leaderboard, setLeaderboard] = useState<CreaplineLeaderboard[]>([]);
-  const [refreshTimer, setRefreshTimer] = useState(0);
-  const refreshInterval = useRef<NodeJS.Timeout>();
+
+  const creaplineLeaderboardRef = collection(db, "c-leaderboard");
 
   function getLeaderBoard() {
-    // FetchCreaplineHistories()
-    //   .then((resp) => {
-    //     console.log("resp", resp);
-    //     if (!resp.success) return;
-    //     setRefreshTimer(10);
-    //     setLeaderboard(resp.data);
-    //     clearInterval(refreshInterval.current);
-    //     refreshInterval.current = setInterval(() => {
-    //       setRefreshTimer((prev) => {
-    //         if (prev <= 0) {
-    //           clearInterval(refreshInterval.current);
-    //           getLeaderBoard();
-    //         }
-    //         return prev > 0 ? prev - 1 : 0;
-    //       });
-    //     }, 1000);
-    //   })
-    //   .catch(() => {});
+    onSnapshot(creaplineLeaderboardRef, (snapshot) => {
+      console.log("snapshot", snapshot);
+      console.log(snapshot.docs);
+      const newLeaderboard: CreaplineLeaderboard[] = [];
+      snapshot.docs.forEach((doc) => {
+        newLeaderboard.push(doc.data() as CreaplineLeaderboard);
+      });
+
+      setLeaderboard(newLeaderboard);
+    });
   }
   useEffect(() => {
     getLeaderBoard();
@@ -46,9 +40,9 @@ const Leaderboard = (props: Props) => {
         <h4 className="font-semibold flex items-center gap-2 ms-2">
           <LucideCalendarClock className="w-5 h-5" /> Permainan Terkini
         </h4>
-        <Button size={"sm"} onClick={getLeaderBoard} variant={"default"}>
+        {/* <Button size={"sm"} onClick={getLeaderBoard} variant={"default"}>
           <RefreshCwIcon className="w-4 h-4 me-1" /> {refreshTimer}s
-        </Button>
+        </Button> */}
       </div>
       <div className="flex gap-2 flex-col">
         <Suspense fallback="Loading...">
@@ -58,12 +52,12 @@ const Leaderboard = (props: Props) => {
               className="p-2 flex gap-2 hover:brightness-95 duration-150 items-center"
             >
               <Avatar>
-                <AvatarImage src={item.image || ""} />
+                <AvatarImage src={item.user.image || ""} />
                 <AvatarFallback>
-                  {item.name?.[0].toUpperCase()}
+                  {item.user.name?.[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <h4 className="">{item.name}</h4>
+              <h4 className="">{item.user.name}</h4>
               <div className=" py-1 px-3 flex items-center rounded text-xs ms-auto ">
                 <TimerIcon className="w-4 h-4" /> {item.time}s
               </div>
