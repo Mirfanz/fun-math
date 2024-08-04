@@ -19,7 +19,6 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
   updateProfile,
 } from "firebase/auth";
 import { AlertCircleIcon, GithubIcon, GoalIcon } from "lucide-react";
@@ -134,7 +133,7 @@ const LoginUI = (props: Props) => {
         </div>
         <div className="flex flex-col gap-2">
           <Button
-            onClick={() => signInWithRedirect(auth, new GoogleAuthProvider())}
+            onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}
           >
             <GoalIcon className="w-4 h-4 me-2" /> Login With Google
           </Button>

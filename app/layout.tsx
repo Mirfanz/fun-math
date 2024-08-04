@@ -23,14 +23,6 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4555201872253805"
-          crossOrigin="anonymous"
-        ></script>
-        <meta name="google-adsense-account" content="ca-pub-4555201872253805" />
-      </Head>
       <body className={poppins.className}>
         <AuthProvider>
           <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>

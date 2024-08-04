@@ -23,13 +23,27 @@ const HomeUI = (props: Props) => {
         <Card className="mb-3 duration-150">
           <CardHeader>
             <CardTitle className="">Creapline</CardTitle>
-            <CardDescription className="line-clamp-2">
-              Salah satu psikotes yang sering dipake perusahaan saat
-              recruitment.
-            </CardDescription>
           </CardHeader>
+          <CardContent className="text-justify">
+            Uji kemampuan analisis dan pemecahan masalahmu dengan Creapline,
+            permainan psikotes yang menantang dan mendidik.
+          </CardContent>
           <CardFooter className="gap-2">
             <Link href="/game/creapline">
+              <Button size={"sm"}>Mulai Bermain</Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card className="mb-3 duration-150">
+          <CardHeader>
+            <CardTitle className="">Snake Jadul</CardTitle>
+          </CardHeader>
+          <CardContent className="text-justify">
+            Nikmati permainan ular klasik yang mengasyikkan, navigasikan ular
+            untuk makan titik-titik dan hindari menabrak dinding!
+          </CardContent>
+          <CardFooter className="gap-2">
+            <Link href="/game/snake">
               <Button size={"sm"}>Mulai Bermain</Button>
             </Link>
           </CardFooter>

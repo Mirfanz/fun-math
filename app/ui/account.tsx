@@ -3,24 +3,9 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { useSession } from "@/context/auth-provider";
-import { auth } from "@/firebase";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithRedirect,
-  signOut,
-} from "firebase/auth";
-import {
-  AlertCircleIcon,
-  LogOutIcon,
-  SettingsIcon,
-  Share2Icon,
-} from "lucide-react";
-import Image from "next/image";
+
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import Swal from "sweetalert2";
 
 const AccountUI = () => {
